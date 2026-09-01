@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>متجري الصغير</title>
+<style>
+:root{
+ --teal:#239b9a; --teal2:#e2f5f2; --purple:#8d6bc9; --lav:#f0eafb;
+ --yellow:#ffd36a; --pink:#f6a8ba; --cream:#fff9ef; --navy:#243a57;
+ --green:#50a669; --red:#dc646b; --line:#e8dfef;
+}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(145deg,#f8fcfb,#fff7ec);font-family:Tahoma,Arial,sans-serif;color:var(--navy);padding:8px}
+.app{width:min(1040px,100%);margin:auto;background:#fff;border:2px solid #d9ece8;border-radius:26px;overflow:hidden;box-shadow:0 16px 45px rgba(35,58,74,.12)}
+.screen{display:none}.screen.active{display:block}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 16px;background:#fffaf2;border-bottom:1px solid #eee4d5}
+.top button,.score{border:0;border-radius:15px;padding:10px 14px;font-weight:800;font-size:16px}
+.top button{background:var(--yellow);cursor:pointer}.score{background:#fff0c2}
+.brand{font-size:clamp(22px,4vw,34px);font-weight:900;color:#177f82}
+.progress{height:9px;background:#edf3f1;margin:0 16px 14px;border-radius:99px;overflow:hidden}.progress span{display:block;height:100%;background:var(--teal);width:0;transition:.3s}
+
+.home{min-height:78vh;text-align:center;padding:0 18px 26px;background:
+radial-gradient(circle at 12% 15%,#efe8fb 0 80px,transparent 82px),
+radial-gradient(circle at 90% 88%,#fff0c8 0 110px,transparent 112px),
+linear-gradient(#fffefb,#fff9ef)}
+.awning{height:58px;margin:0 -18px 20px;background:repeating-linear-gradient(90deg,var(--teal) 0 68px,#fff6e4 68px 136px);border-bottom:4px solid #dfcfb7}
+.home h1{font-size:clamp(44px,7vw,74px);color:#6c4327;margin:10px 0 3px}.home h2{margin:0 0 18px;color:#147f82;font-size:clamp(20px,3vw,31px)}
+.home-grid{display:grid;grid-template-columns:190px 1fr 150px;gap:18px;align-items:end;max-width:900px;margin:auto}
+.mascot{width:100%;max-width:185px;height:auto;object-fit:contain}
+.shop{background:#fffaf0;border:3px solid #ead6b5;border-radius:24px;padding:22px}
+.products{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.prod{background:#fff;border:2px solid #efe3d5;border-radius:16px;padding:14px 6px;font-size:38px}
+.cart{font-size:76px}.buttons{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px}
+.btn{border:0;border-radius:19px;padding:14px 24px;font-size:clamp(17px,2.6vw,23px);font-weight:900;cursor:pointer;box-shadow:0 7px 16px rgba(31,60,60,.10)}
+.primary{background:var(--teal);color:#fff}.secondary{background:var(--yellow);color:#694a19}.purple{background:var(--purple);color:#fff}
+.instructions{display:none;max-width:760px;margin:18px auto 0;background:#fff;border:2px dashed #c9b7e9;border-radius:18px;padding:16px;line-height:1.9;font-size:17px}
+
+.question-wrap{padding:18px 16px 24px}
+.question-panel{max-width:820px;margin:auto;background:var(--cream);border:2px dashed #cab9e7;border-radius:24px;padding:26px 18px;text-align:center}
+.small-mascot{width:110px;height:auto;margin:0 auto 5px;display:block}
+.stage-label{display:inline-block;background:var(--teal2);color:#147f82;padding:8px 15px;border-radius:999px;font-weight:900;margin-bottom:12px}
+.question{font-size:clamp(25px,4vw,38px);font-weight:900;line-height:1.55;margin:10px auto 20px;max-width:760px}
+.answers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.answer{background:#fff;border:2px solid var(--line);border-radius:18px;padding:17px 10px;font-size:clamp(18px,2.8vw,23px);font-weight:900;cursor:pointer;min-height:68px}
+.answer.correct{background:#ecf8ee;border-color:#acd8b6}.answer.wrong{background:#fff0f1;border-color:#efbbc0}
+.feedback{min-height:46px;padding-top:12px;font-size:20px;font-weight:900}
+.to-image{display:none;margin:8px auto 0}
+
+.explain{padding:16px}
+.explain-card{background:#fffaf3;border:2px solid #eadfce;border-radius:24px;padding:14px;text-align:center}
+.explain-title{font-size:clamp(26px,4vw,40px);font-weight:900;color:#147f82;margin:5px 0 12px}
+.image-frame{width:100%;background:#f7f3eb;border:2px dashed #cab9e7;border-radius:20px;padding:8px;display:flex;justify-content:center;align-items:center;min-height:300px}
+.image-frame img{display:block;max-width:100%;width:auto;height:auto;max-height:72vh;object-fit:contain;border-radius:14px}
+.explain-text{margin:14px auto 10px;max-width:800px;background:#eaf7f4;border:1px solid #bde2da;border-radius:16px;padding:13px;font-size:19px;font-weight:800;line-height:1.7}
+.next{margin:6px auto 4px}
+
+.finish{padding:20px 14px 28px;text-align:center;background:linear-gradient(#fffdf9,#fff5e8)}
+.finish-img-frame{width:100%;max-width:760px;margin:auto;background:#fff;border:2px dashed #c9b7e9;border-radius:22px;padding:8px;display:flex;justify-content:center}
+.finish-img-frame img{max-width:100%;width:auto;height:auto;max-height:76vh;object-fit:contain;border-radius:14px}
+.finish-buttons{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:16px}
+
+@media(max-width:760px){
+ .home-grid{grid-template-columns:1fr}.home-grid .mascot{max-width:145px;margin:auto}.cart{display:none}
+ .answers{grid-template-columns:1fr}.image-frame img{max-height:none;width:100%}
+ .question-panel{padding:20px 12px}
+}
+</style>
+</head>
+<body>
+<main class="app">
+
+<section id="home" class="screen active">
+ <div class="home">
+  <div class="awning"></div>
+  <h1>متجري الصغير 🛒</h1>
+  <h2>تعلّم البيع والشراء وطرق الدفع</h2>
+  <div class="home-grid">
+   <img class="mascot" src="mascot.png" alt="">
+   <div class="shop">
+    <div class="products">
+     <div class="prod">🥛</div><div class="prod">🍎</div><div class="prod">🥔</div>
+     <div class="prod">🧃</div><div class="prod">🍪</div><div class="prod">🥖</div>
+    </div>
+    <div class="buttons">
+     <button class="btn primary" onclick="startGame()">ابدأ اللعب</button>
+     <button class="btn secondary" onclick="toggleInstructions()">تعليمات اللعبة</button>
+    </div>
+   </div>
+   <div class="cart">🛒</div>
+  </div>
+  <div id="instructions" class="instructions">في كل مرحلة يظهر السؤال أولًا. اختر الإجابة، وبعد الإجابة الصحيحة ستظهر لك صفحة توضيحية بالصورة ثم تنتقل للمرحلة التالية.</div>
+ </div>
+</section>
+
+<section id="questionScreen" class="screen">
+ <div class="top">
+  <button onclick="goHome()">🏠 الرئيسية</button>
+  <div id="topTitle" class="brand"></div>
+  <div class="score" id="score">⭐ 0</div>
+ </div>
+ <div class="progress"><span id="bar"></span></div>
+ <div class="question-wrap">
+  <div class="question-panel">
+   <img class="small-mascot" src="mascot.png" alt="">
+   <div id="stageLabel" class="stage-label"></div>
+   <div id="question" class="question"></div>
+   <div id="answers" class="answers"></div>
+   <div id="feedback" class="feedback"></div>
+   <button id="toImage" class="btn purple to-image" onclick="showExplanation()">شاهد الشرح والصورة ←</button>
+  </div>
+ </div>
+</section>
+
+<section id="explainScreen" class="screen">
+ <div class="top">
+  <button onclick="goHome()">🏠 الرئيسية</button>
+  <div id="explainTopTitle" class="brand"></div>
+  <div class="score" id="score2">⭐ 0</div>
+ </div>
+ <div class="progress"><span id="bar2"></span></div>
+ <div class="explain">
+  <div class="explain-card">
+   <div id="explainTitle" class="explain-title"></div>
+   <div class="image-frame"><img id="stageImage" alt=""></div>
+   <div id="explainText" class="explain-text"></div>
+   <button id="nextBtn" class="btn primary next" onclick="nextStage()">المرحلة التالية ←</button>
+  </div>
+ </div>
+</section>
+
+<section id="finishScreen" class="screen">
+ <div class="finish">
+  <h1 style="color:#7650b5">أحسنت! 🎉</h1>
+  <div class="finish-img-frame"><img src="finish.png" alt="شاشة الإنجاز"></div>
+  <div class="finish-buttons">
+   <button class="btn purple" onclick="startGame()">↻ أعد اللعب</button>
+   <button class="btn primary" onclick="goHome()">🏠 الصفحة الرئيسية</button>
+  </div>
+ </div>
+</section>
+
+</main>
+<script>
+let idx=0, stars=0, locked=false;
+
+const stages=[
+ {title:"أعرف عملة وطني",image:"stage1.png",
+  q:"ما رمز عملة وطننا المملكة العربية السعودية؟",
+  a:[["﷼ الريال السعودي",1],["$ الدولار",0],["€ اليورو",0]],
+  success:"أحسنت! هذا هو رمز الريال السعودي.",
+  explain:"الريال السعودي هو عملة وطننا، وهذا هو رمزه."
+ },
+ {title:"أشتري من المتجر",image:"stage2.png",
+  q:"أريد شراء هذا المنتج، ماذا أفعل؟",
+  a:[["أدفع ثمنه",1],["آخذه دون دفع",0]],
+  success:"أحسنت! نشتري المنتجات بعد دفع ثمنها.",
+  explain:"لا نأخذ أي منتج من المتجر دون دفع ثمنه."
+ },
+ {title:"كيف سأدفع؟",image:"stage3.png",
+  q:"كيف يمكنني دفع ثمن مشترياتي؟",
+  a:[["بالنقود 💵",1],["بالبطاقة البنكية 💳",1]],
+  success:"رائع! كلا الطريقتين صحيحتان.",
+  explain:"يمكن الدفع بالنقود، ويمكن أيضًا الدفع بالبطاقة البنكية."
+ },
+ {title:"أنا التاجر الصغير",image:"stage4.png",
+  q:"ثمن المنتج 5 ريالات، أي مبلغ أختار؟",
+  a:[["2 ريال",0],["5 ريالات",1],["10 ريالات",0]],
+  success:"ممتاز! اخترت المبلغ الصحيح.",
+  explain:"عندما يكون السعر 5 ريالات نختار مبلغ 5 ريالات."
+ },
+ {title:"التاجر الأمين",image:"stage5.png",
+  q:"دفع الزبون 10 ريالات وسعر المنتج 6 ريالات. ماذا يفعل التاجر الأمين؟",
+  a:[["يعيد 4 ريالات للزبون",1],["يحتفظ بالمبلغ الزائد",0]],
+  success:"أحسنت! التاجر الأمين يحفظ حقوق الآخرين.",
+  explain:"10 - 6 = 4 ريالات، ويعيد التاجر الأمين المبلغ الزائد للزبون."
+ }
+];
+
+function show(id){
+ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function toggleInstructions(){
+ const x=document.getElementById("instructions");
+ x.style.display=x.style.display==="block"?"none":"block";
+}
+function startGame(){idx=0;stars=0;loadQuestion()}
+function goHome(){show("home")}
+function loadQuestion(){
+ locked=false; const s=stages[idx];
+ document.getElementById("topTitle").textContent=s.title;
+ document.getElementById("stageLabel").textContent=`المرحلة ${idx+1} من ${stages.length}`;
+ document.getElementById("question").textContent=s.q;
+ document.getElementById("feedback").textContent="";
+ document.getElementById("toImage").style.display="none";
+ document.getElementById("score").textContent="⭐ "+stars;
+ document.getElementById("bar").style.width=((idx)/stages.length*100)+"%";
+ const box=document.getElementById("answers"); box.innerHTML="";
+ s.a.forEach((x,n)=>{
+  const b=document.createElement("button"); b.className="answer"; b.textContent=x[0];
+  b.onclick=()=>choose(n,b); box.appendChild(b);
+ });
+ show("questionScreen");
+}
+function choose(n,b){
+ if(locked)return; const s=stages[idx];
+ if(s.a[n][1]){
+  locked=true; stars+=5; b.classList.add("correct");
+  document.getElementById("score").textContent="⭐ "+stars;
+  document.getElementById("feedback").textContent="🌟 "+s.success;
+  document.querySelectorAll(".answer").forEach(x=>x.disabled=true);
+  document.getElementById("toImage").style.display="block";
+ }else{
+  b.classList.add("wrong"); b.disabled=true;
+  document.getElementById("feedback").textContent="💡 فكّر مرة أخرى.";
+ }
+}
+function showExplanation(){
+ const s=stages[idx];
+ document.getElementById("explainTopTitle").textContent=s.title;
+ document.getElementById("explainTitle").textContent="أحسنت! شاهد التوضيح";
+ document.getElementById("stageImage").src=s.image;
+ document.getElementById("explainText").textContent=s.explain;
+ document.getElementById("score2").textContent="⭐ "+stars;
+ document.getElementById("bar2").style.width=((idx+1)/stages.length*100)+"%";
+ document.getElementById("nextBtn").textContent=idx===stages.length-1?"شاهد النتيجة 🎉":"المرحلة التالية ←";
+ show("explainScreen");
+}
+function nextStage(){
+ idx++;
+ if(idx<stages.length) loadQuestion();
+ else show("finishScreen");
+}
+</script>
+</body>
+</html>
