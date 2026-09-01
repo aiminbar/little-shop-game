@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>متجري الصغير</title>
+<style>
+:root{--navy:#23375b;--teal:#62b9ad;--mint:#dff4ed;--lav:#e9e3f7;--pink:#f7dfe8;--yellow:#fff0bd;--cream:#fffaf0;--white:#fff;--red:#b54a59}
+*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial,sans-serif;background:linear-gradient(135deg,#f8f3ff,#fff9e9,#eefaf7);color:var(--navy);min-height:100vh}
+.app{width:min(100%,980px);margin:auto;min-height:100vh;padding:18px}.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}.brand{font-weight:900;font-size:clamp(18px,3vw,28px)}.progress{background:#fff;border:2px solid #d9dcec;border-radius:999px;padding:8px 14px;font-weight:800;box-shadow:0 5px 15px #23375b12}
+.card{background:#fff;border:3px solid #d9dcec;border-radius:30px;box-shadow:0 12px 32px #23375b1b;padding:clamp(18px,4vw,36px);text-align:center;overflow:hidden}.home{min-height:76vh;display:grid;place-items:center}.home-inner{max-width:720px}.icon{font-size:70px}.title{font-size:clamp(34px,7vw,64px);margin:5px 0 8px;font-weight:900}.sub{font-size:clamp(17px,3vw,24px);line-height:1.8;margin:0 0 24px}.btn{border:0;border-radius:18px;padding:15px 24px;font-size:20px;font-weight:900;cursor:pointer;background:var(--teal);color:#fff;box-shadow:0 6px 0 #45988e;transition:.12s}.btn:active{transform:translateY(3px);box-shadow:0 3px 0 #45988e}.question{font-size:clamp(25px,5vw,38px);line-height:1.55;margin:8px auto 24px;max-width:800px}.answers{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;max-width:800px;margin:auto}.answer{min-height:84px;border:3px solid #d8ddeb;background:#fff;border-radius:22px;padding:15px;font-size:clamp(20px,4vw,28px);font-weight:900;color:var(--navy);cursor:pointer;box-shadow:0 7px 16px #23375b12}.answer:hover{border-color:var(--teal);background:#f7fffd}.answer.wrong{animation:shake .3s;border-color:#e89aa5;background:#fff3f5}.answer.correct{border-color:#72c7a8;background:#effcf5}.symbol{font-size:54px;direction:ltr;min-height:110px}.feedback{min-height:36px;font-size:20px;font-weight:900;margin:18px 0 0}.bad{color:var(--red)}.good{color:#278369}.explain img,.finish img{display:block;width:100%;height:auto;max-height:72vh;object-fit:contain;border-radius:20px;background:#f8f8f8}.explain h2{font-size:28px;margin:0 0 14px}.next{margin-top:18px}.stars{font-size:22px;letter-spacing:2px}.hide{display:none!important}@keyframes shake{25%{transform:translateX(7px)}50%{transform:translateX(-7px)}75%{transform:translateX(5px)}}
+@media(max-width:560px){.app{padding:10px}.card{border-radius:22px;padding:16px}.answers{grid-template-columns:1fr}.answer{min-height:70px}.symbol{font-size:48px}.top{align-items:flex-start}.progress{font-size:13px;padding:7px 10px}}
+</style>
+</head><body><main class="app"><div id="root"></div></main>
+<script>
+const stages=[
+ {q:'ما رمز عملة المملكة العربية السعودية؟',opts:['﷼','$','€'],correct:0,img:'assets/stage1.png',symbols:true},
+ {q:'أيٌّ من هذه يُعد دفعًا نقديًا؟',opts:['النقود الورقية والمعدنية','البطاقة البنكية','الهاتف'],correct:0,img:'assets/stage2.png'},
+ {q:'كيف يمكنني الدفع دون استخدام النقود الورقية أو المعدنية؟',opts:['بالبطاقة البنكية','بأخذ المنتج دون دفع','بترك المنتج'],correct:0,img:'assets/stage2.png'},
+ {q:'إذا أردت شراء شيء من المتجر، ماذا أفعل؟',opts:['أختار ما أريد وأدفع ثمنه','آخذه دون دفع','أخفيه في حقيبتي'],correct:0,img:'assets/stage4.png'},
+ {q:'ماذا نفعل عندما تصل فاتورة خدمة استخدمناها؟',opts:['نسدد الفاتورة','نتجاهلها','نمزقها'],correct:0,img:'assets/stage5.png'},
+ {q:'ماذا يعني أن أدّخر المال؟',opts:['أحتفظ بجزء منه لاستخدامه لاحقًا','أصرفه كله فورًا','أضيعه'],correct:0,img:'assets/stage6.png'},
+ {q:'أي تصرف يُعد استخدامًا جيدًا للمال لمساعدة الآخرين؟',opts:['التصدق لمحتاج','إتلاف المال','شراء أشياء لا أحتاجها'],correct:0,img:'assets/stage7.png'},
+ {q:'سعر العصير ٥ ريالات، كم أدفع؟',opts:['٢ ريال','٥ ريالات','١٠ ريالات'],correct:1,img:'assets/stage8.png'},
+ {q:'معي ١٠ ريالات واشتريت شيئًا بـ٦ ريالات، كم يتبقى معي؟',opts:['٢ ريال','٤ ريالات','٦ ريالات'],correct:1,img:'assets/stage9.png'}
+];
+let i=0,score=0; const root=document.getElementById('root');
+function shell(inner){root.innerHTML=`<div class="top"><div class="brand">🛒 متجري الصغير</div><div class="progress">${i?`المرحلة ${Math.min(i,stages.length)} من ${stages.length} · ⭐ ${score}`:'تعلم البيع والشراء وطرق الدفع'}</div></div>${inner}`}
+function home(){i=0;score=0;shell(`<section class="card home"><div class="home-inner"><div class="icon">🛍️</div><h1 class="title">متجري الصغير</h1><p class="sub">نتعرّف على رمز الريال السعودي والعملات، ونميّز طرق الدفع، ونتدرّب على الشراء وحساب المبلغ والمتبقي.</p><button class="btn" onclick="start()">ابدأ اللعب</button></div></section>`)}
+function start(){i=0;score=0;question()}
+function question(){const s=stages[i];shell(`<section class="card"><div class="stars">${'⭐'.repeat(i)}${'☆'.repeat(stages.length-i)}</div><h2 class="question">${s.q}</h2><div class="answers">${s.opts.map((o,n)=>`<button class="answer ${s.symbols?'symbol':''}" onclick="pick(${n},this)">${o}</button>`).join('')}</div><div id="fb" class="feedback"></div></section>`)}
+function pick(n,el){const s=stages[i],fb=document.getElementById('fb');if(n===s.correct){document.querySelectorAll('.answer').forEach(b=>b.disabled=true);el.classList.add('correct');score++;fb.className='feedback good';fb.textContent='أحسنت! إجابة صحيحة ⭐';setTimeout(explain,550)}else{el.classList.remove('wrong');void el.offsetWidth;el.classList.add('wrong');fb.className='feedback bad';fb.textContent='حاول مرة أخرى 🌷'}}
+function explain(){const s=stages[i];shell(`<section class="card explain"><h2>أحسنت! تعرّف على المعلومة 👏</h2><img src="${s.img}" alt="صورة شرح المرحلة ${i+1}"><button class="btn next" onclick="nextStage()">${i===stages.length-1?'إنهاء التحدي':'التالي'}</button></section>`)}
+function nextStage(){i++; if(i>=stages.length)finish(); else question()}
+function finish(){shell(`<section class="card finish"><img src="assets/finish.png" alt="أصبحت تاجرًا صغيرًا"><button class="btn next" onclick="home()">إعادة اللعب</button></section>`)}
+home();
+</script></body></html>
