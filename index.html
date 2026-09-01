@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>متجري الصغير</title>
+<style>
+:root{--t:#198f91;--p:#8865c7;--y:#f3c65c;--g:#4b9c60;--r:#d35c63;--ink:#26344a}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#f7fbfa,#fff7ec);font-family:Tahoma,Arial,sans-serif;color:var(--ink);padding:10px}
+.app{max-width:1050px;margin:auto;background:#fff;border:2px solid #d9ece7;border-radius:26px;overflow:hidden;box-shadow:0 16px 45px #204d451b}
+.screen{display:none}.active{display:block}.hero{position:relative}.hero img,.stage-img{width:100%;display:block}
+.hero img{aspect-ratio:16/10;object-fit:cover}.cover-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;padding:16px}
+.btn{border:0;border-radius:18px;padding:14px 24px;font-size:21px;font-weight:800;cursor:pointer}.primary{background:var(--t);color:#fff}.secondary{background:var(--y);color:#5b461e}
+.instructions{display:none;text-align:center;padding:0 20px 22px;font-size:18px;line-height:1.8}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;background:#fffaf1}
+.title{font-size:30px;font-weight:900;color:var(--t)}.score{background:#fff1c9;padding:9px 14px;border-radius:14px;font-weight:800}
+.progress{height:10px;background:#edf1ef;margin:0 18px 14px;border-radius:99px;overflow:hidden}.progress span{display:block;height:100%;background:var(--t);width:0;transition:.3s}
+.stage{padding:0 18px 22px}.stage-img{aspect-ratio:16/10;object-fit:cover;border-radius:20px;border:3px solid #edf3ef}
+.card{margin-top:14px;border:2px dashed #cdbfe8;border-radius:20px;padding:16px;background:#fffdf8}.q{text-align:center;font-size:27px;font-weight:900;margin-bottom:14px}
+.answers{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.answer{border:2px solid #e6dfed;background:white;border-radius:16px;padding:14px 8px;font-size:20px;font-weight:800;cursor:pointer;min-height:60px}
+.good{background:#edf8ef!important;border-color:#add9b6!important}.bad{background:#fff0f0!important;border-color:#efc0c4!important}.feedback{text-align:center;min-height:44px;padding-top:10px;font-size:20px;font-weight:800}
+.next{display:none;margin:3px auto 0;background:var(--p);color:white}.finish-img{width:100%;display:block}.finish-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:16px 18px 24px}
+@media(max-width:680px){.answers{grid-template-columns:1fr}.title{font-size:23px}.btn{font-size:18px}.q{font-size:22px}.hero img,.stage-img{aspect-ratio:16/11}}
+</style></head>
+<body><main class="app">
+<section id="cover" class="screen active">
+<div class="hero"><img src="cover.png" alt="متجري الصغير"></div>
+<div class="cover-actions"><button class="btn primary" onclick="start()">ابدأ اللعب 🛒</button><button class="btn secondary" onclick="toggleInstructions()">تعليمات اللعبة 📖</button></div>
+<div id="instructions" class="instructions">شاهد كل مرحلة، ثم اختر الإجابة الصحيحة. اجمع النجوم وتعرّف على البيع والشراء وطرق الدفع والأمانة.</div>
+</section>
+<section id="game" class="screen">
+<div class="top"><button class="btn secondary" onclick="home()">الرئيسية 🏠</button><div id="title" class="title"></div><div id="score" class="score">⭐ 0</div></div>
+<div class="progress"><span id="bar"></span></div>
+<div class="stage"><img id="stageImage" class="stage-img" src=""><div class="card"><div id="question" class="q"></div><div id="answers" class="answers"></div><div id="feedback" class="feedback"></div><button id="next" class="btn next" onclick="nextStage()">التالي ←</button></div></div>
+</section>
+<section id="finish" class="screen"><img class="finish-img" src="finish.png" alt="أحسنت"><div class="finish-actions"><button class="btn primary" onclick="restart()">أعد اللعب ↻</button><button class="btn secondary" onclick="home()">الرئيسية 🏠</button></div></section>
+</main>
+<script>
+const stages=[
+{title:"أعرف عملة وطني",image:"stage1.png",q:"ما رمز عملة وطننا المملكة العربية السعودية؟",a:[["﷼ الريال السعودي",1],["$ الدولار",0],["€ اليورو",0]],ok:"أحسنت! هذا هو رمز الريال السعودي."},
+{title:"أشتري من المتجر",image:"stage2.png",q:"أريد شراء هذا المنتج، ماذا أفعل؟",a:[["أدفع ثمنه",1],["آخذه دون دفع",0]],ok:"أحسنت! نشتري المنتجات بعد دفع ثمنها."},
+{title:"كيف سأدفع؟",image:"stage3.png",q:"كيف يمكنني دفع ثمن مشترياتي؟",a:[["بالنقود 💵",1],["بالبطاقة البنكية 💳",1]],ok:"رائع! يمكن أن يكون الدفع نقديًا أو غير نقدي."},
+{title:"أنا التاجر الصغير",image:"stage4.png",q:"ثمن المنتج 5 ريالات، أي مبلغ أختار؟",a:[["2 ريال",0],["5 ريالات",1],["10 ريالات",0]],ok:"ممتاز! اخترت المبلغ الصحيح."},
+{title:"التاجر الأمين",image:"stage5.png",q:"دفع الزبون مبلغًا أكبر من السعر بالخطأ، ماذا يفعل التاجر الأمين؟",a:[["يعيد المبلغ الزائد للزبون",1],["يحتفظ بالمبلغ الزائد",0]],ok:"أحسنت! التاجر الأمين يحفظ حقوق الآخرين."}
+];
+let i=0,stars=0,locked=false;
+const $=id=>document.getElementById(id);
+function show(id){document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));$(id).classList.add("active");window.scrollTo(0,0)}
+function toggleInstructions(){const x=$("instructions");x.style.display=x.style.display==="block"?"none":"block"}
+function start(){i=0;stars=0;show("game");load()}
+function home(){show("cover")} function restart(){i=0;stars=0;show("game");load()}
+function load(){locked=false;let s=stages[i];$("title").textContent=s.title;$("stageImage").src=s.image;$("question").textContent=s.q;$("feedback").textContent="";$("next").style.display="none";$("bar").style.width=(i/stages.length*100)+"%";$("score").textContent="⭐ "+stars;let box=$("answers");box.innerHTML="";s.a.forEach((x,n)=>{let b=document.createElement("button");b.className="answer";b.textContent=x[0];b.onclick=()=>choose(n,b);box.appendChild(b)})}
+function choose(n,b){if(locked)return;let s=stages[i];if(s.a[n][1]){locked=true;stars+=5;b.classList.add("good");$("score").textContent="⭐ "+stars;$("feedback").textContent="🌟 "+s.ok;document.querySelectorAll(".answer").forEach(x=>x.disabled=true);$("next").textContent=i===stages.length-1?"شاهد النتيجة 🎉":"المرحلة التالية ←";$("next").style.display="block"}else{b.classList.add("bad");b.disabled=true;$("feedback").textContent="💡 فكّر مرة أخرى."}}
+function nextStage(){i++;if(i<stages.length)load();else{show("finish")}}
+</script></body></html>
